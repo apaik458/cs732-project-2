@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="python_nodes" type="movement.py" name="movement_node" />
+    <node pkg="python_nodes" type="datalogging.py" name="logging_node" output="screen" />
+    <node pkg="python_nodes" type="laserscanlogging.py" name="scan_node" />
+</launch>
+
