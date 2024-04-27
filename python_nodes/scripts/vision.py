@@ -5,14 +5,16 @@ import numpy as np
 
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
-from geometry_msgs.msg import Point
+from std_msgs.msg import Float32
 
 class colour_detection:
     def __init__(self):
         self.bridge = CvBridge()
         
+        rospy.init_node('colour_detector', anonymous=True)
+
         self.image_sub = rospy.Subscriber("/camera/rgb/image_raw", Image, self.callback)
-        # self.image_pub = rospy.Publisher("hand_point_topic", Point)
+        self.image_pub = rospy.Publisher("servo_topic", Float32, queue_size=10)
 
     def callback(self, data):
         cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -29,9 +31,13 @@ class colour_detection:
 
         # apply mask to image and get all non zero values
         coord = cv2.findNonZero(mask)
-        coord_mean = (int(cv2.mean(coord)[0]), int(cv2.mean(coord)[1]))
+        x_mean = int(cv2.mean(coord)[0])
+        y_mean = int(cv2.mean(coord)[1])
 
-        cv2.circle(cv_image, coord_mean, 5, (0,255,0), cv2.FILLED)
+        cv2.circle(cv_image, (x_mean, y_mean), 5, (0,255,0), cv2.FILLED)
+
+        # 640 x 480 screen resolution
+        self.image_pub.publish(x_mean / 640 - 0.5)
 
         # display image
         cv2.imshow("Res", cv_image)
@@ -40,9 +46,7 @@ class colour_detection:
             rospy.signal_shutdown("Closing windows")
 
 def main():
-    cd = colour_detection()
-
-    rospy.init_node('colour_detector', anonymous=True)
+    colour_detection()
 
     rospy.spin()
     cv2.destroyAllWindows()
