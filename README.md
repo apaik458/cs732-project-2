@@ -4,6 +4,7 @@ Clone repo into workspace
 ```bash
 cd catkin_ws/src
 git clone https:github.com/apaik458/cs732-project-2.git
+git clone -b melodic-devel https://github.com/paulbovbel/frontier_exploration.git
 ```
 
 Make and source project files
@@ -18,8 +19,17 @@ Launch Gazebo world
 roslaunch turtlebot_worlds world_1.launch
 ```
 
-Run object detection and visual servoing nodes
+Launch gmapping node
 ```bash
-rosrun python_nodes vision.py
-rosrun python_nodes movement.py
+roslaunch turtlebot_navigation gmapping_demo.launch
+```
+
+Launch frontier exploration node
+```bash
+roslaunch exploration_server exploration.launch plugin:=exploration_server::ExamplePlugin
+```
+
+Launch rviz
+```bash
+roslaunch turtlebot_rviz_launchers view_navigation.launch
 ```
