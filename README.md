@@ -26,7 +26,7 @@ roslaunch turtlebot_navigation gmapping_demo.launch
 
 Launch frontier exploration node
 ```bash
-roslaunch exploration_server exploration.launch plugin:=exploration_server::ExamplePlugin
+roslaunch exploration_server exploration.launch
 ```
 
 Launch rviz
